@@ -1,0 +1,219 @@
+global
+        log /dev/log    local0
+        log /dev/log    local1 notice
+        chroot /var/lib/haproxy
+        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+        stats timeout 30s
+        user haproxy
+        group haproxy
+        daemon
+
+        # Default SSL material locations
+        ca-base /etc/ssl/certs
+        crt-base /etc/ssl/private
+
+        # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
+        ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+        ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+        ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
+
+defaults
+        log     global
+        mode    http
+        option  httplog
+        option  dontlognull
+        timeout connect 5000
+        timeout client  50000
+        timeout server  50000
+        errorfile 400 /etc/haproxy/errors/400.http
+        errorfile 403 /etc/haproxy/errors/403.http
+        errorfile 408 /etc/haproxy/errors/408.http
+        errorfile 500 /etc/haproxy/errors/500.http
+        errorfile 502 /etc/haproxy/errors/502.http
+        errorfile 503 /etc/haproxy/errors/503.http
+        errorfile 504 /etc/haproxy/errors/504.http
+
+
+# -------- FRONTEND CONFIGURATION --------
+frontend wireless-tme.com
+        bind            10.10.105.6:443 ssl crt /etc/ssl/certs/wireless_tme_com.pem
+        reqadd          X-Frwarded-Proto:\ https
+        redirect        scheme https code 301 if !{ ssl_fc }
+        rspadd          Strict-Transport-Security:\ max-age=15768000
+        acl                     pod1-wlc        var(txn.txnhost) -m str -i pod1-wlc.wireless-tme.com
+        acl                     pod2-wlc        var(txn.txnhost) -m str -i pod2-wlc.wireless-tme.com
+        acl                     pod3-wlc        var(txn.txnhost) -m str -i pod3-wlc.wireless-tme.com
+        acl                     pod4-wlc        var(txn.txnhost) -m str -i pod4-wlc.wireless-tme.com
+        acl                     pod5-wlc        var(txn.txnhost) -m str -i pod5-wlc.wireless-tme.com
+        acl                     pod6-wlc        var(txn.txnhost) -m str -i pod6-wlc.wireless-tme.com
+        acl                     pod7-wlc        var(txn.txnhost) -m str -i pod7-wlc.wireless-tme.com
+        acl                     pod8-wlc        var(txn.txnhost) -m str -i pod8-wlc.wireless-tme.com
+        acl                     pod9-wlc        var(txn.txnhost) -m str -i pod9-wlc.wireless-tme.com
+        acl                     pod10-wlc       var(txn.txnhost) -m str -i pod10-wlc.wireless-tme.com
+        acl                     pod11-wlc       var(txn.txnhost) -m str -i pod11-wlc.wireless-tme.com
+        acl                     pod12-wlc       var(txn.txnhost) -m str -i pod12-wlc.wireless-tme.com
+        acl                     pod13-wlc       var(txn.txnhost) -m str -i pod13-wlc.wireless-tme.com
+        acl                     pod14-wlc       var(txn.txnhost) -m str -i pod14-wlc.wireless-tme.com
+        acl                     pod15-wlc       var(txn.txnhost) -m str -i pod15-wlc.wireless-tme.com
+        acl                     allpods-dnac    var(txn.txnhost) -m str -i allpods-dnac.wireless-tme.com
+        acl                     aclcrt_wireless-tme.com var(txn.txnhost) -m reg -i ^([^\.]*)\.wireless\-tme\.com(:([0-9]){1,5})?$
+        acl                     aclcrt_wireless-tme.com var(txn.txnhost) -m reg -i ^wireless\-tme\.com(:([0-9]){1,5})?$
+        http-request set-var(txn.txnhost) hdr(host)
+        http-request  deny if { req.hdr_cnt(content-length) gt 1 }
+        http-response deny if { res.hdr_cnt(content-length) gt 1 }
+        use_backend     pod1-wlc        if pod1-wlc aclcrt_wireless-tme.com
+        use_backend     pod2-wlc        if pod2-wlc aclcrt_wireless-tme.com
+        use_backend     pod3-wlc        if pod3-wlc aclcrt_wireless-tme.com
+        use_backend     pod4-wlc        if pod4-wlc aclcrt_wireless-tme.com
+        use_backend     pod5-wlc        if pod5-wlc aclcrt_wireless-tme.com
+        use_backend     pod6-wlc        if pod6-wlc aclcrt_wireless-tme.com
+        use_backend     pod7-wlc        if pod7-wlc aclcrt_wireless-tme.com
+        use_backend     pod8-wlc        if pod8-wlc aclcrt_wireless-tme.com
+        use_backend     pod9-wlc        if pod9-wlc aclcrt_wireless-tme.com
+        use_backend     pod10-wlc       if pod10-wlc aclcrt_wireless-tme.com
+        use_backend     pod11-wlc       if pod11-wlc aclcrt_wireless-tme.com
+        use_backend     pod12-wlc       if pod12-wlc aclcrt_wireless-tme.com
+        use_backend     pod13-wlc       if pod13-wlc aclcrt_wireless-tme.com
+        use_backend     pod14-wlc       if pod14-wlc aclcrt_wireless-tme.com
+        use_backend     pod15-wlc       if pod15-wlc aclcrt_wireless-tme.com
+        use_backend     allpods-dnac    if allpods-dnac aclcrt_wireless-tme.com
+
+frontend Redirect-HTTP-to-HTTPs
+        bind                    10.10.105.6:80 name 10.10.105.6:80
+        mode                    http
+        log                     global
+        option                  http-keep-alive
+        timeout client          30000
+        http-request redirect scheme https
+        http-request  deny if { req.hdr_cnt(content-length) gt 1 }
+        http-response deny if { res.hdr_cnt(content-length) gt 1 }
+
+# --------- BACKEND CONFIGURATION ---------
+
+backend pod1-wlc
+        mode                    http
+        id                      102
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod1-wlc 10.10.10.3:443 id 103 ssl verify none
+
+backend pod2-wlc
+        mode                    http
+        id                      104
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod2-wlc 10.10.20.3:443 id 105 ssl verify none
+
+backend pod3-wlc
+        mode                    http
+        id                      106
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod1-wlc 10.10.30.3:443 id 107 ssl verify none
+
+backend pod4-wlc
+        mode                    http
+        id                      108
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod4-wlc 10.10.40.3:443 id 109 ssl verify none
+
+backend pod5-wlc
+        mode                    http
+        id                      110
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod5-wlc 10.10.50.3:443 id 110 ssl verify none
+
+backend pod6-wlc
+        mode                    http
+        id                      111
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod6-wlc 10.10.60.3:443 id 112 ssl verify none
+
+backend pod7-wlc
+        mode                    http
+        id                      113
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod7-wlc 10.10.70.3:443 id 114 ssl verify none
+
+backend pod8-wlc
+        mode                    http
+        id                      115
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod8-wlc 10.10.80.3:443 id 116 ssl verify none
+
+backend pod9-wlc
+        mode                    http
+        id                      117
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod9-wlc 10.10.90.3:443 id 101 ssl verify none
+
+backend pod10-wlc
+        mode                    http
+        id                      118
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod10-wlc 10.10.10.3:443 id 119 ssl verify none
+
+backend pod11-wlc
+        mode                    http
+        id                      120
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod11-wlc 10.10.110.3:443 id 121 ssl verify none
+
+backend pod12-wlc
+        mode                    http
+        id                      122
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod12-wlc 10.10.120.3:443 id 123 ssl verify none
+
+backend pod13-wlc
+        mode                    http
+        id                      124
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod13-wlc 10.10.130.3:443 id 125 ssl verify none
+
+backend pod14-wlc
+        mode                    http
+        id                      126
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod14-wlc 10.10.140.3:443 id 127 ssl verify none
+
+backend pod15-wlc
+        mode                    http
+        id                      128
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server pod15-wlc 10.10.150.3:443 id 129 ssl verify none
+
+backend allpods-dnac
+        mode                    http
+        id                      130
+        log                     global
+        timeout connect         30000
+        timeout server          30000
+        server allpods-dnac 10.10.105.5:443 id 131 ssl verify none
