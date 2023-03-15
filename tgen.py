@@ -104,7 +104,6 @@ def startTraffic():
         #At 5PM, break the loop and return to wait for next scheduled run
         t = time.localtime()
         current_hour = time.strftime("%H", t)
-        print(current_hour)
         if current_hour == "17":
             break
         else:
