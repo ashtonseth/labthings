@@ -101,7 +101,7 @@ def startTraffic():
         
         i += 1 # one hit cycle completed
         
-        #At 5PM, break the loop and return to wait for next scheduled run
+        #At 5PM, break the loop and return
         t = time.localtime()
         current_hour = time.strftime("%H", t)
         if current_hour == "17":
@@ -122,6 +122,6 @@ while True:
     t = time.localtime()
     current_time = time.strftime("%I:%M:%S%p", t)
     print("\n*** THE CURRENT TIME IS  {} ***\n".format(current_time))
-    startTraffic()
-    schedule.run_pending()
+    startTraffic() #Start running at time of execution
+    schedule.run_pending() #wait for next scheduled run
     time.sleep(30)
