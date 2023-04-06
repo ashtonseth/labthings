@@ -26,14 +26,14 @@ How to Use:
 wget_traffic = { #URL filtering test URLs
 					"Zoom":"https://www.zoom.us/",
 					"Cisco":"https://www.cisco.com/",
-                    			"Twitter":"https://www.twitter.com/", #SOCIAL MEDIA
+                    "Twitter":"https://www.twitter.com/", #SOCIAL MEDIA
 					"Microsoft Teams":"https://teams.microsoft.com/",
 					"Webex":"https://www.webex.com/",
 					"Box":"https://www.box.com/",
 					"Facebook":"https://www.facebook.com/", #SOCIAL MEDIA 
 					"888 Gambling":"https://www.888.com/",
 					"Sephora":"https://www.sephora.com/", #BEAUTY & MAKEUP
-                			"Youtube":"https://www.youtube.com" #STREAMING - YOUTUBE
+                    "Youtube":"https://www.youtube.com" #STREAMING - YOUTUBE
 				}
 
 ips_traffic = [ #IPS Traffic test user-agent argument for curl command
@@ -41,13 +41,13 @@ ips_traffic = [ #IPS Traffic test user-agent argument for curl command
 					"spam_bot",
 					"GetRight",
 					"\"() {:;}; /bin/cat /etc/passwd\"",
-                   			 "\"-H 'range: bytes=0-18446744073709551615'\""
+                    "\"-H 'range: bytes=0-18446744073709551615'\""
 				]
 
 malware_traffic = { #AMP test malicious file download / ZBFW Access URLs for curl command
 					"Eicar file":"https://secure.eicar.org/eicar.com.txt",
 					"africau PDF":"http://www.africau.edu/images/default/sample.pdf",
-                    			"C&C 10.101.150.40:8001":"http://10.101.150.40:8001", #ZBFW RULE
+                    "C&C 10.101.150.40:8001":"http://10.101.150.40:8001", #ZBFW RULE
 					"W3 PDF":"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
 				}
 
@@ -79,7 +79,7 @@ def startTraffic():
         
         #Normal Traffic Hit
         if (c % 1 == 0):
-            current = list(wget_traffic.items())[j]
+            current = list(wget_traffic.items())[n]
             os.system('wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0" -q --delete-after {}'.format(current[1]))
             print("{} - WGET attempt to {}.".format(current_time, current[0]))
             if n == wget_dict - 1: #Reset index at the end of the list
@@ -89,7 +89,7 @@ def startTraffic():
         
         #IPS Signature Hit Attempt
         if (c % 13 == 0):
-            current = ips_traffic[k]
+            current = ips_traffic[i]
             os.system('sudo curl -4 -v -L -k -o /dev/null --connect-timeout 3 https://bing.com --user-agent {}'.format(current))
             print("{} - IPS Hit attempt with user-agent {}".format(current_time, current))
             if i == ips_dict - 1: #Reset index at the end of the list
@@ -119,6 +119,7 @@ def startTraffic():
 
 
 #RUN SCHEDULE: Every Weekday at 8 AM
+schedule.every
 schedule.every().monday.at("08:00").do(startTraffic)
 schedule.every().tuesday.at("08:00").do(startTraffic)
 schedule.every().wednesday.at("08:00").do(startTraffic)
@@ -126,4 +127,7 @@ schedule.every().thursday.at("08:00").do(startTraffic)
 schedule.every().friday.at("08:00").do(startTraffic)
 
 while True:
+    if 1 == 1:
+        startTraffic()
     schedule.run_pending() #wait for next scheduled run
+    time.sleep(1)
