@@ -26,14 +26,14 @@ How to Use:
 wget_traffic = { #URL filtering test URLs
 					"Zoom":"https://www.zoom.us/",
 					"Cisco":"https://www.cisco.com/",
-                    "Twitter":"https://www.twitter.com/" #SOCIAL MEDIA
+                    			"Twitter":"https://www.twitter.com/", #SOCIAL MEDIA
 					"Microsoft Teams":"https://teams.microsoft.com/",
 					"Webex":"https://www.webex.com/",
 					"Box":"https://www.box.com/",
 					"Facebook":"https://www.facebook.com/", #SOCIAL MEDIA 
 					"888 Gambling":"https://www.888.com/",
-					"Sephora":"https://www.sephora.com/" #BEAUTY & MAKEUP
-                    "Youtube":"https://www.youtube.com" #STREAMING - YOUTUBE
+					"Sephora":"https://www.sephora.com/", #BEAUTY & MAKEUP
+                			"Youtube":"https://www.youtube.com" #STREAMING - YOUTUBE
 				}
 
 ips_traffic = [ #IPS Traffic test user-agent argument for curl command
@@ -41,13 +41,13 @@ ips_traffic = [ #IPS Traffic test user-agent argument for curl command
 					"spam_bot",
 					"GetRight",
 					"\"() {:;}; /bin/cat /etc/passwd\"",
-                    "\"-H 'range: bytes=0-18446744073709551615'\""
+                   			 "\"-H 'range: bytes=0-18446744073709551615'\""
 				]
 
 malware_traffic = { #AMP test malicious file download / ZBFW Access URLs for curl command
 					"Eicar file":"https://secure.eicar.org/eicar.com.txt",
 					"africau PDF":"http://www.africau.edu/images/default/sample.pdf",
-                    "C&C 10.101.150.40:8001":"http://10.101.150.40:8001", #ZBFW RULE
+                    			"C&C 10.101.150.40:8001":"http://10.101.150.40:8001", #ZBFW RULE
 					"W3 PDF":"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
 				}
 
@@ -121,10 +121,9 @@ def startTraffic():
 #RUN SCHEDULE: Every Weekday at 8 AM
 schedule.every().monday.at("08:00").do(startTraffic)
 schedule.every().tuesday.at("08:00").do(startTraffic)
-schedule.every().wednesdpinay.at("08:00").do(startTraffic)
+schedule.every().wednesday.at("08:00").do(startTraffic)
 schedule.every().thursday.at("08:00").do(startTraffic)
 schedule.every().friday.at("08:00").do(startTraffic)
 
 while True:
     schedule.run_pending() #wait for next scheduled run
-
