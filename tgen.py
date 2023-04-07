@@ -80,7 +80,7 @@ def startTraffic():
         #Normal Traffic Hit
         if (c % 1 == 0):
             current = list(wget_traffic.items())[n]
-            #os.system('wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0" -q --delete-after {}'.format(current[1]))
+            os.system('wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0" -q --delete-after {}'.format(current[1]))
             print("{} - WGET attempt to {}.".format(current_time, current[0]))
             if n == wget_dict - 1: #Reset index at the end of the list
                 n = 0
@@ -90,7 +90,7 @@ def startTraffic():
         #IPS Signature Hit Attempt
         if (c % 13 == 0):
             current = ips_traffic[i]
-            #os.system('sudo curl -4 -v -L -k -o /dev/null --connect-timeout 3 https://bing.com --user-agent {}'.format(current))
+            os.system('sudo curl -4 -v -L -k -o /dev/null --connect-timeout 3 https://bing.com --user-agent {}'.format(current))
             print("{} - IPS Hit attempt with user-agent {}".format(current_time, current))
             if i == ips_dict - 1: #Reset index at the end of the list
                 i = 0
@@ -100,7 +100,7 @@ def startTraffic():
         #Malware File Download Attempt
         if (c % 17 == 0):
             current = list(malware_traffic.items())[m]
-            #os.system('sudo curl -4 -v -L -k -o /dev/null --connect-timeout 3 {}'.format(current[1]))
+            os.system('sudo curl -4 -v -L -k -o /dev/null --connect-timeout 3 {}'.format(current[1]))
             print("{} - Malware download attempt from {}".format(current_time, current[1]))
             if m == malware_dict - 1: #Reset index at the end of the list
                 m = 0
