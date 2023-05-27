@@ -67,7 +67,7 @@ def startTraffic():
     malware_dict = len(malware_traffic)
 
     #Hit Counters
-    c = 0 #cycle counter - 1 cycle / second
+    c = 0 #cycle counter - 1 cycle / minute
     n = 0 #normal hit counter @ 1 hit/cycle
     i = 0 #IPS hit counter @ 1/13  hit/cycle
     m = 0 #malware hit counter @ 1/17 hit/cycle
@@ -115,7 +115,7 @@ def startTraffic():
         if current_hour >= 17:
             break
         else:
-            time.sleep(1)
+            time.sleep(60)
 
 
 #RUN SCHEDULE: Every Weekday at 8 AM
